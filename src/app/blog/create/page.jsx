@@ -1,13 +1,21 @@
 import { redirect } from "next/navigation"
+import { PrismaClient } from "@prisma/client"
 
 async function handlePost( FormData ) {
   "use server"
 
   const { title, content } = Object.fromEntries(FormData)
+  const pris_data = new PrismaClient()
 
+  const blog_data = await pris_data.blog.create({
+    data: {
+      title: title,
+      content: content
+    }
+  })
   // Prisma will handle this here!
 
-  redirect("/blog")
+  redirect(`/blog/${blog_data.blog_id}`)
 }
 
 export default function CreateBlog() {

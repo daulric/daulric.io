@@ -41,8 +41,8 @@ export default function Home() {
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-5xl font-bold mb-6">Welcome to daulric den</h1>
             <p className="text-xl mb-8">Get Some Useful Stuff Done!</p>
-            <Link href="/signup" className="bg-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
-              Get Started
+            <Link href="https://instagram.com/ulricaird" target="_blank" className="bg-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
+              Follow Me
             </Link>
           </div>
         </div>

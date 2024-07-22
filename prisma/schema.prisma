@@ -18,11 +18,4 @@ model Blog {
   title   String
   content String
   timeCreated DateTime @default(now())
-
-  Blogs Blogs[]
-}
-
-model Blogs {
-  current_blog_id Int @id @default(autoincrement())
-  blogs Blog[]
 }
