@@ -1,10 +1,15 @@
 import { redirect } from "next/navigation"
 import { PrismaClient } from "@prisma/client"
 
-async function handlePost( FormData ) {
+async function handlePost( FormData) {
   "use server"
 
   const { title, content } = Object.fromEntries(FormData)
+  
+  if (title === "" || content === "") {
+    throw new Error("No Title or Content")
+  }
+
   const pris_data = new PrismaClient()
 
   const blog_data = await pris_data.blog.create({
@@ -13,7 +18,6 @@ async function handlePost( FormData ) {
       content: content
     }
   })
-  // Prisma will handle this here!
 
   redirect(`/blog/${blog_data.blog_id}`)
 }

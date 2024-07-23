@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "prisma-build": "npx prisma generate --no-engine",
+    "deploy": "npm run prisma-build && npm run build && npm run start",
     "lint": "next lint"
   },
   "dependencies": {
