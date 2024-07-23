@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --hostname 0.0.0.0",
     "prisma-build": "npx prisma generate --no-engine",
     "deploy": "npm run prisma-build && npm run build && npm run start",
     "lint": "next lint"

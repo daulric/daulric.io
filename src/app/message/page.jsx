@@ -16,8 +16,6 @@ async function SendMessage(FormData) {
             }),
         })
     } catch (err) {
-        // Just in case :)
-        console.log(err.message)
         return redirect("/message/failed")
     }
 

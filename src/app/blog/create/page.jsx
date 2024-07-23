@@ -5,21 +5,22 @@ async function handlePost( FormData) {
   "use server"
 
   const { title, content } = Object.fromEntries(FormData)
-  
-  if (title === "" || content === "") {
-    throw new Error("No Title or Content")
-  }
 
-  const pris_data = new PrismaClient()
-
-  const blog_data = await pris_data.blog.create({
-    data: {
+  const data  = await fetch(`${process.env.NEXT_URL}/api/blog`, {
+    method: "POST",
+    body: JSON.stringify({
       title: title,
-      content: content
-    }
+      content: content,
+    })
   })
 
-  redirect(`/blog/${blog_data.blog_id}`)
+  if (data.ok) {
+      const blog_data = await data.json()
+      redirect(`/blog/${blog_data.blog_id}`)
+  } else {
+    throw new Error("Error Creating Post")
+  }
+
 }
 
 export default function CreateBlog() {

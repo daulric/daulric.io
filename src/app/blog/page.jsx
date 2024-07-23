@@ -1,16 +1,19 @@
 import Link from "next/link"
-import { PrismaClient } from "@prisma/client"
 import { unstable_noStore as noStore } from "next/cache"
 
 const getBlogs = async () => {
     noStore()
-    const data = new PrismaClient()
 
-    const blog_data = await data.blog.findMany()
+    const data = await fetch(`${process.env.NEXT_URL}/api/blog?descending=true`, {
+        method: "GET",
+    })
 
-    console.log(blog_data)
-    blog_data.sort((a, b) => b.blog_id - a.blog_id)
-    return blog_data
+    if (data.ok) {
+        return data.json()
+    } else {
+        throw new Error("daulric den Server Error")
+    }
+
 }
 
 function GetBlogCard(blog) {
