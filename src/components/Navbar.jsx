@@ -16,7 +16,8 @@ function HandleNav({link, text, hidden}) {
 const Navbar = (props) => {
   const NavLinks = props.items ||  [
     { text: "Home", link: "/" },
-    { text: "Blog", link: "/blog" }
+    { text: "Blog", link: "/blog" },
+    { text: "Message", link: "/message" },
   ]
 
   const [isOpen, setIsOpen] = useState(false)
