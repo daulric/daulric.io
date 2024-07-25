@@ -1,13 +1,9 @@
-import Image from "next/image";
-
-// app/page.js
 import Link from 'next/link';
-import { title } from "process";
 
 const items = [
-  { title: "Easy Integration", description: "Seamlessly integrate with your existing systems" },
-  { title: "Powerful Analytics", description: "Gain insights with our advanced analytics tools" },
-  { title: "24/7 Support", description: "Round-the-clock support to assist you anytime" }
+  {title: "I am Easy Going", description: "I am an easy going person, usually friendly and straight forward with people."},
+  { title: "Vast Knowledge", description: "I have a great knowledge about certain topics and situations." },
+  { title: "I am a Developer", description: "I am a developer with some years of experience in Backend Technologies." },
 ]
 
 interface Items {
@@ -39,27 +35,27 @@ export default function Home() {
       <section className="bg-gray-800 text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6">Welcome to daulric den</h1>
-            <p className="text-xl mb-8">Get Some Useful Stuff Done!</p>
+            <h1 className="text-5xl font-bold mb-6">welcome to daulric den</h1>
+            <p className="text-xl mb-8">View Some Information About Me</p>
             <Link href="https://instagram.com/ulricaird" target="_blank" className="bg-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
-              Follow Me
+              follow me
             </Link>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
+      
       <section className="py-20">
-        <Features items={items} title="Key Features" />
+        <Features items={items} title="Quick Rundown About Me" />
       </section>
 
       {/* CTA Section */}
       <section className="bg-gray-800 text-white py-20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl mb-8">Join thousands of satisfied customers and take your business to the next level.</p>
-          <Link href="/contact" className="bg-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
-            Contact Us
+          <h2 className="text-3xl font-bold mb-6">Ready to Explore</h2>
+          <Link href="/message" className="bg-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
+            message me and lets start together
           </Link>
         </div>
       </section>

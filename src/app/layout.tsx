@@ -7,12 +7,15 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "daulric",
-  description: "A Simple App",
+  description: "daulric den",
 };
 
 export default function RootLayout({ children }: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/images/logo.png" />
+      </head>
       <body className={inter.className}>
         <Navbar />
         {children}
