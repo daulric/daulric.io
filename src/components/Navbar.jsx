@@ -17,7 +17,7 @@ const Navbar = (props) => {
   const NavLinks = props.items ||  [
     { text: "home", link: "/" },
     {text: "about", link: "/about"},
-    { text: "blog", link: "/blog" },
+    //{ text: "blog", link: "/blog" },
     { text: "message", link: "/message" },
   ]
 
