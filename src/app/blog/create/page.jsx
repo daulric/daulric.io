@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation"
-import { PrismaClient } from "@prisma/client"
 
 async function handlePost( FormData) {
   "use server"

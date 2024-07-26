@@ -18,7 +18,7 @@ const getBlogs = async () => {
 
 function GetBlogCard(blog) {
     return (
-        <div key={blog.id} className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+        <div key={blog.blog_id} className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
             <div className="p-6">
                 <h3 className="text-xl font-semibold mb-2 text-gray-100">{blog.title}</h3>
                 <p className="text-gray-400 mb-4">{blog.content}</p>

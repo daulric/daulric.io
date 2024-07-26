@@ -1,15 +1,23 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-
-import { PrismaClient } from "@prisma/client"
+import { unstable_noStore as noStore } from "next/cache"
 
 async function getBlogPost(id) {
+  noStore()
 
-  const data = new PrismaClient()
-
-  let blog = await data.blog.findUnique({
-      where: { blog_id: Number(id) },
+  const data = await fetch(`${process.env.NEXT_URL}/api/blog`, {
+    method: "GET",
   })
+
+  if (!data.ok) {
+    throw new Error("Couldn't get blog post")
+  }
+
+  const blog_data = await data.json()
+  console.log(blog_data)
+
+  let blog = blog_data.filter((blog) => blog.blog_id === Number(id))[0]
+  console.log(blog)
 
   if (!blog) {
     return null;
