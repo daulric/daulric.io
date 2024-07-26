@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
-    "prisma-build": "npx prisma migrate deploy && npx prisma generate",
+    "prisma-build": "npx prisma generate && npx prisma migrate deploy",
     "deploy": "npm run prisma-build && npm run build && npm run start",
     "lint": "next lint"
   },
