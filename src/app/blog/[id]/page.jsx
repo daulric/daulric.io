@@ -5,25 +5,21 @@ import { unstable_noStore as noStore } from "next/cache"
 async function getBlogPost(id) {
   noStore()
 
-  const data = await fetch(`${process.env.NEXT_URL}/api/blog`, {
+  const data = await fetch(`${process.env.NEXT_URL}/api/blog?id=${id}`, {
     method: "GET",
   })
 
   if (!data.ok) {
-    throw new Error("Couldn't get blog post")
+    return null
   }
 
-  const blog_data = await data.json()
-  console.log(blog_data)
+  const blog = await data.json()
 
-  let blog = blog_data.filter((blog) => blog.blog_id === Number(id))[0]
-  console.log(blog)
-
-  if (!blog) {
+  if (!blog || blog.length === 0 ) {
     return null;
   }
 
-  return blog;
+  return blog[0];
 }
 
 export default async function BlogPost({ params }) {
