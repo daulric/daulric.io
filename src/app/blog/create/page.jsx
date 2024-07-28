@@ -1,4 +1,10 @@
 import { redirect } from "next/navigation"
+import { title } from "process"
+
+export const metadata = {
+  title: "Blog - Create",
+  description: "Create Your Very Own Blog",
+}
 
 async function handlePost( FormData) {
   "use server"

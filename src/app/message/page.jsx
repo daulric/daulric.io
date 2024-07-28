@@ -1,5 +1,10 @@
 import { redirect } from "next/navigation"
 
+export const metadata = {
+  title: "Message",
+  description: "Send an Anonymous Message",
+}
+
 async function SendMessage(FormData) {
     "use server"
     const { name, message } = Object.fromEntries(FormData)

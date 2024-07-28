@@ -21,6 +21,7 @@ export default function AboutPage() {
                     alt="Cover Image"
                     fill
                     style={{objectFit: "cover"}}
+                    priority
                 />
                 <div className="absolute inset-0 bg-black opacity-60"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
@@ -33,10 +34,11 @@ export default function AboutPage() {
             <div className="flex flex-col sm:flex-row items-center mb-10">
                 <Image
                 src="/images/profile.jpg"
-                alt="John Doe"
+                alt="Ulric"
                 width={150}
                 height={150}
                 className="rounded-full border-4 border-blue-400 shadow-lg mb-4 sm:mb-0 sm:mr-6"
+                priority
                 />
                 <div>
                 <p className="text-lg text-gray-600 leading-relaxed">
@@ -59,6 +61,7 @@ export default function AboutPage() {
                     width={600}
                     height={400}
                     className="rounded-lg"
+                    priority
                 />
                 <p className="text-sm text-gray-500 mt-2 text-center">
                     Met the Prime Minister in 2023. (idk what to put here)

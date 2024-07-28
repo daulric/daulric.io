@@ -8,16 +8,18 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "daulric",
   description: "daulric den",
+
+  icons: {
+    apple: "/images/logo.png",
+    icon: "/images/logo.png"
+  },
+
+  manifest: "/manifest.json"
 };
 
 export default function RootLayout({ children }: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en">
-
-      <head>
-        <link rel="icon" href="/images/logo.png" />
-      </head>
-
       <body className={inter.className}>
         <Navbar />
         {children}

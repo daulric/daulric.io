@@ -2,6 +2,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import "./style.css"
 
+export const metadata = {
+  title: "Message - Status",
+  description: "Message Status"
+}
+
 export default function MessageStatus({ params }) {
   const { status } = params;
 

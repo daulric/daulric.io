@@ -1,6 +1,11 @@
 import Link from "next/link"
 import { unstable_noStore as noStore } from "next/cache"
 
+export const metadata = {
+    title: "Blogs",
+    description: "View Some Exciting / Boring Blogs"
+}
+
 const getBlogs = async () => {
     noStore()
 
