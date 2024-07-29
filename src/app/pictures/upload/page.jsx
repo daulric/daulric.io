@@ -8,6 +8,7 @@ export default function UploadPage() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [uploadStatus, setUploadStatus] = useState(null);
+  const [isClicked, setisClicked] = useState(false)
   const fileInputRef = useRef(null);
 
   const router = useRouter();
@@ -106,6 +107,8 @@ export default function UploadPage() {
             <button
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              disabled={isClicked}
+              onClick={() => setisClicked(true)}
             >
               Upload
             </button>
