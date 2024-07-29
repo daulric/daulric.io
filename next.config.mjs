@@ -14,7 +14,16 @@ const withPWA = pwa({
 })
 
 const nextConfig = {
-    
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: process.env.supa_url,
+                pathname: "/storage/v1/**",
+                port: ""
+            }
+        ]
+    }
 };
 
 export default withPWA(nextConfig);

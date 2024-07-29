@@ -19,6 +19,7 @@ const Navbar = (props) => {
     {text: "about", link: "/about"},
     { text: "blog", link: "/blog" },
     { text: "message", link: "/message" },
+    {text: "pictures", link: "/pictures"},
   ]
 
   const [isOpen, setIsOpen] = useState(false)
