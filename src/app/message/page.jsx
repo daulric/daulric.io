@@ -6,25 +6,38 @@ export const metadata = {
 }
 
 async function SendMessage(FormData) {
-    "use server"
-    const { name, message } = Object.fromEntries(FormData)
+  "use server"
+  const { name, message } = Object.fromEntries(FormData)
 
-    try {
-        await fetch(process.env.discord_webhook, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                username: name,
-                content: message,
-            }),
-        })
-    } catch (err) {
-        return redirect("/message/failed")
-    }
+  const response = await fetch(`${process.env.NEXT_URL}/api/message`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
 
-    return redirect("/message/success")
+    body: JSON.stringify({
+      name: name,
+      message: message,
+    })
+
+  })
+
+  if (!response.ok) {
+    return redirect("/message/failed")
+  }
+
+  const data = await response.json()
+
+  switch (data.success) {
+    case true:
+      return redirect("/message/success")
+    
+    case false:
+      return redirect("/message/failed")
+
+    default:
+      return redirect("/message/failed")
+  }
 }
 
 
