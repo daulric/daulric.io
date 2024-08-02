@@ -1,11 +1,16 @@
 'use client';
 
+import { maxHeaderSize } from 'http';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const chatWindowRef = useRef(null);
+
+    const processMessageContent = (content) => {
+        return content.replace(/\*/g, '');
+      };
 
     const sendMessage = async () => {
         if (!input) return;
@@ -55,7 +60,7 @@ export default function Chat() {
                                 msg.user === 'You' ? 'text-right' : 'text-left'
                             }`}
                         >
-                            <strong>{msg.user}:</strong> {msg.text}
+                            <strong>{msg.user}:</strong> {processMessageContent(msg.text)}
                         </div>
                     ))}
                 </div>

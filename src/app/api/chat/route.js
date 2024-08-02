@@ -6,20 +6,14 @@ const model = ai.getGenerativeModel({
     model: "gemini-pro",
 })
 
-export const metadata = {
-    title: "Chat with AI",
-    description: "Chat with AI"
-}
-
 export async function POST(request) {
     const { message } = await request.json();
-    const aiResponse = `${message}`;
 
     const chat = model.startChat({
         generationConfig: {
             maxOutputTokens: 100,
         },
-    })
+    });
 
     const result = await chat.sendMessage(message);
     const response = result.response.text();
