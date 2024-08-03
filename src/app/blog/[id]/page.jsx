@@ -34,7 +34,7 @@ export default async function BlogPost({ params }) {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-4">{blog.title}</h1>
         <div className="text-gray-400 mb-6">
-          <span>{String(blog.timeCreated)}</span>
+          <span>{new Date(blog.timeCreated)}</span>
         </div>
         <div className="prose prose-invert max-w-none whitespace-pre-line">
           <p>{blog.content}</p>
