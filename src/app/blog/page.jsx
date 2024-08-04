@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { unstable_noStore as noStore } from "next/cache"
+import Markdown from "react-markdown"
 
 export const metadata = {
     title: "Blogs",
@@ -16,7 +17,7 @@ const getBlogs = async () => {
     if (data.ok) {
         return data.json()
     } else {
-        throw new Error("daulric den Server Error")
+        throw new Error("daulric den blog server error")
     }
 
 }

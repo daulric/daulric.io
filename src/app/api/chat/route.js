@@ -10,9 +10,8 @@ export async function POST(request) {
     const { message } = await request.json();
 
     const chat = model.startChat({
-        generationConfig: {
-            maxOutputTokens: 100,
-        },
+        history: [],
+        generationConfig: {},
     });
 
     const result = await chat.sendMessage(message);
