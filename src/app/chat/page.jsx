@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkDown from "react-markdown"
+import crypto from "crypto"
 
 export default function Chat() {
     const [messages, setMessages] = useState([]);
@@ -60,7 +61,7 @@ export default function Chat() {
                             }`}
                         >
                             <strong className="text-base">{msg.user}:</strong>
-                            <ReactMarkDown className="text-sm whitespace-pre-line leading-relaxed mt-1">
+                            <ReactMarkDown className="text-bold whitespace-pre-line">
                                 {msg.text}
                             </ReactMarkDown>
                         </div>
