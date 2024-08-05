@@ -8,6 +8,24 @@ export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const chatWindowRef = useRef(null);
+    
+    let cookieStore = {}
+
+    useEffect(() => {
+        let cookies = document.cookie.split(';');
+
+        cookies.forEach(cookie => {
+            let [name, value] = cookie.split('=')
+            cookieStore[name] = value
+        })
+
+        if (!cookieStore["chat_key"]) {
+            let key = crypto.randomBytes(32).toString("hex")
+            document.cookie = `chat_key=${key}`
+            cookieStore["chat_key"] = key;
+            console.log("created!")
+        }
+    }, [cookieStore])
 
     const sendMessage = async () => {
         if (!input) return;
@@ -20,7 +38,7 @@ export default function Chat() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ message: input }),
+            body: JSON.stringify({ message: input, id: cookieStore["chat_key"] }),
         });
     
         const data = await response.json();
@@ -45,7 +63,6 @@ export default function Chat() {
         <div className="flex flex-col h-[calc(100vh-64px)] bg-gray-900 text-white p-3">
             <div className="flex-shrink-0 mb-3 text-center"> {}
                 <h1 className="text-2xl font-bold">Chat with AI</h1>
-                <p className="text-sm">messages here will not be stored!</p>
             </div>
             
             <div className="flex-grow flex flex-col overflow-hidden bg-gray-800 rounded-lg shadow-lg">
@@ -58,10 +75,10 @@ export default function Chat() {
                             key={index}
                             className={`message mb-3 ${
                                 msg.user === 'You' ? 'text-right' : 'text-left'
-                            }`}
+                            } p-4`}
                         >
                             <strong className="text-base">{msg.user}:</strong>
-                            <ReactMarkDown className="text-bold whitespace-pre-line">
+                            <ReactMarkDown className="text-bold whitespace-pre-wrap">
                                 {msg.text}
                             </ReactMarkDown>
                         </div>
