@@ -12,8 +12,10 @@ export function GET() {
 }
 
 export async function POST(request) {
+    // request data sent here;
     const { message, id } = await request.json();
 
+    // returns error response is id is not found
     if (!id) {
         return NextResponse.json({
             response: "You must create a secure id to use this chat!",
@@ -23,14 +25,12 @@ export async function POST(request) {
     const supa_db = SupabaseClient();
     const chat_db = supa_db.from("Chat Storage");
 
-    const {data, error} = await chat_db.select()
-    let Chat_History;
+    // Get filtered chat data
+    const {data, error} = await chat_db.select().eq("chat_id", id)
     let data_gotten;
 
-    let chat_associated_id = data.filter((chat) => chat.chat_id === id);
-
     // Get Chat History From Database;
-    if (!chat_associated_id || chat_associated_id.length === 0) {
+    if (!data || data === null || data.length === 0) {
         let created_history = [
             {
                 role: "user",
@@ -42,19 +42,16 @@ export async function POST(request) {
             }
         ]
 
-        await chat_db.insert({
+        data_gotten = await chat_db.insert({
             chat_id: id,
             chat_history: JSON.stringify(created_history),
-        })
-
-        let got_data = await chat_db.select("*")
-        data_gotten = got_data.data.filter(chat => chat.chat_id === id)
+        }).select()
     } else {
-        data_gotten = chat_associated_id
+        data_gotten = data
     }
 
     // Parsed the Chat History to convert it from a string!
-    Chat_History = JSON.parse(data_gotten[0].chat_history);
+    let Chat_History = JSON.parse(data_gotten[0].chat_history);
 
     // Chat history with given chat history
     const chat = model.startChat({
@@ -68,6 +65,7 @@ export async function POST(request) {
 
     // Storing Data
     Chat_History.map((history) => {
+        
         if (history.role === "user") {
             history.parts.push({text: message})
         }

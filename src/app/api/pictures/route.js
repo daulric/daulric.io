@@ -23,6 +23,7 @@ export async function GET(request) {
         })
     })
 
+    // List all images in descending order
     if (String(isDescending) === "true") {
         db_data.sort((a, b) => b.data.created_at.localeCompare(a.data.created_at))
     }
@@ -32,17 +33,22 @@ export async function GET(request) {
 
 export async function POST(request) {
     noStore()
+    
+    // Get all the info uploaded!
     const upload_data = await request.formData();
     const file = upload_data.get("file");
 
     const supa_db = SupabaseClient()
 
+    // return false if the file doesn't exist
     if (!file) {
         return NextResponse.json({success: false}, {status: 200})
     }
 
+    // Upload the file to the database / storage bucket
     const {data, error}= await (await supa_db.storage.from("images").upload(file.name, file))
 
+    // returns false if the upload failed
     if (error) {
         return NextResponse.json({success: false, error: error}, {status:200})
     }

@@ -13,8 +13,10 @@ export async function GET(request) {
 
     // Fetch data from Supabase;
     const supa_db = SupabaseClient()
-    const {data, error} = await supa_db.from("Blog").select()
+    const blog_db = supa_db.from("Blog")
+    const {data, error} = await blog_db.select()
 
+    // log the error
     if (error) {
         console.error(error)
     }
@@ -22,15 +24,17 @@ export async function GET(request) {
     // Getting Individual Blog Data using the "id" query.
     if (blog_filtered !== null) {
         let filterd = Number(blog_filtered)
-        let blog_filter = data.filter((blog) => blog.blog_id === filterd)
+        let blog_filter = await blog_db.select().eq("blog_id", filterd)
+        let blog_filtered_data = blog_filter.data
         
-        if (blog_filter.length !== 0) {
-            return NextResponse.json(blog_filter, {status: 200})
+        if (blog_filtered_data.length !== 0) {
+            return NextResponse.json(blog_filtered_data, {status: 200})
         } else {
             return new NextResponse("blog id not found", {status: 404})
         }
     }
 
+    // List all blog in descending order
     if (String(isDescending).toLowerCase() === "true") {
         if (data !== null) {
             data.sort((a, b) => b.blog_id - a.blog_id);
@@ -43,13 +47,16 @@ export async function GET(request) {
 export async function POST(request) {
     noStore()
 
+    // Get the Data
     const {title, content} = await request.json();
     const supa_db = SupabaseClient()
 
+    // Store the Data;
     const {data, error} = await supa_db.from("Blog").insert([
         {title, content}
     ]).select()
 
+    // Log the results or error;
     if (error) {
         console.log(error)
     } else {
