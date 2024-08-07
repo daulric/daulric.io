@@ -42,10 +42,12 @@ export async function POST(request) {
             }
         ]
 
-        data_gotten = await chat_db.insert({
+        let items = await chat_db.upsert({
             chat_id: id,
             chat_history: JSON.stringify(created_history),
         }).select()
+
+        data_gotten = items.data;
     } else {
         data_gotten = data
     }

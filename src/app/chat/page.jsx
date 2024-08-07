@@ -60,7 +60,7 @@ export default function Chat() {
     };
 
     return (
-        <div className="flex flex-col h-[calc(100vh-64px)] bg-gray-900 text-white p-3">
+        <div className="flex flex-col h-screen bg-gray-900 text-white p-3">
             <div className="flex-shrink-0 mb-3 text-center"> {}
                 <h1 className="text-2xl font-bold">Chat with AI</h1>
             </div>

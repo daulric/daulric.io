@@ -55,7 +55,7 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Explore</h2>
           <Link href="/message" className="bg-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
-            message me and lets start together
+            message me
           </Link>
         </div>
       </section>
