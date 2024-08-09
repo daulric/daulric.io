@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FaFolder, FaFolderOpen, FaFile } from 'react-icons/fa';
-import SearchBar from './SearchBar';
+import SearchBar from "./SearchBar";
 
 const FileExplorer = ({ files }) => {
   const [searchTerm, setSearchTerm] = useState('');

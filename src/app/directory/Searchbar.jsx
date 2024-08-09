@@ -1,5 +1,3 @@
-import { FaSearch } from 'react-icons/fa';
-
 const SearchBar = ({ onSearch }) => {
   return (
     <div className="relative mb-4">
