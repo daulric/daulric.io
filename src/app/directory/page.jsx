@@ -21,7 +21,7 @@ const initialFiles = [
     ] },
 ];
 
-export default function Home() {
+export default function DirectoryPage() {
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">daulric directory</h1>
