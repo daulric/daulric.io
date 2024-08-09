@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import NavLinks from "./navlinks"
+import NavLinks from "./navlinks.js"
 import Image from 'next/image'
 
 function DropdownNav({ text, items, isOpen, toggleDropdown }) {

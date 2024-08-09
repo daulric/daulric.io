@@ -58,6 +58,8 @@ const FileItem = ({ file }) => {
     if (file.type === 'file') {
       if (file.downloadUrl) {
         window.open(file.downloadUrl, '_blank');
+      } else if (file.path) {
+        window.open(`https://github.com/daulric/daulric.io/blob/site_update/${file.path}`, '_blank');
       } else if (file.linkUrl) {
         window.open(file.linkUrl, '_blank');
       }
