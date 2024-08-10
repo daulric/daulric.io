@@ -2,7 +2,7 @@ module.exports = [
     { text: "Home", link: "/", image: "/images/logo.png" },
     { text: "About", link: "/about", image: "/nav/about.png" },
     { text: "Blog", link: "/blog", image: "/nav/blog.png" },
-    {text: "Open Souce", link: "/directory"},
+    {text: "Open Source", link: "/directory"},
     { 
       text: "Products",
       link: "/",

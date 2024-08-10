@@ -1,4 +1,4 @@
-import FileExplorer from './FileExplorer';
+import FileExplorer from '@/components/FileExplorer/FileExplorer';
 import {files_list as Files} from "@/GetSourceFiles"
 
 export const metadata = {
