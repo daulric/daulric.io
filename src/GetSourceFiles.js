@@ -1,7 +1,7 @@
 const directoryTree = require("directory-tree");
 const path = require("path");
 
-const directory = directoryTree(path.join("./src"), { attributes: ["type"] });
+const directory = directoryTree(path.join("./"), { attributes: ["type"] });
 
 function formatDirectoryTree(node) {
     let result = {
