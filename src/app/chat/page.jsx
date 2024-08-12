@@ -75,10 +75,10 @@ export default function Chat() {
                             key={index}
                             className={`message mb-3 ${
                                 msg.user === 'You' ? 'text-right' : 'text-left'
-                            } p-4`}
+                            } p-2 md:p-4 w-full`}
                         >
-                            <strong className="text-base">{msg.user}:</strong>
-                            <ReactMarkDown className="text-bold whitespace-pre-wrap">
+                            <strong className="text-sm md:text-base">{msg.user}:</strong>
+                            <ReactMarkDown className="text-sm md:text-base font-normal break-words whitespace-pre-wrap">
                                 {msg.text}
                             </ReactMarkDown>
                         </div>

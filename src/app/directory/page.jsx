@@ -6,6 +6,10 @@ export const metadata = {
   description: "Open Source Directory for this project",
 }
 
+let used_files = [
+  {name: "idk", type: "file", downloadUrl: "/about"}
+]
+
 export default function DirectoryPage() {
   return (
     <main className="p-4">
