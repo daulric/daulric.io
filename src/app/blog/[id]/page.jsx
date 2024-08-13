@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { unstable_noStore as noStore } from "next/cache"
 
 import Markdown from 'react-markdown';
+import LikeButton from "./LikeButton"
 
 export const metadata = {
   title: "Post",
@@ -40,9 +41,10 @@ export default async function BlogPost({ params }) {
   return (
     <div className="bg-gray-900 text-gray-100 min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-4">{blog.title}</h1>
-        <div className="text-gray-400 mb-6">
-          <span>{date.toUTCString()}</span>
+        <h1 className="text-3xl font-bold mb-4 text-center">{blog.title}</h1>
+        <div className="flex items-center space-x-4 text-gray-400 mb-6">
+          <span className="text-gray-400">{date.toUTCString()}</span>
+          <LikeButton id={params.id} />
         </div>
         <div>
           <Markdown className="prose prose-invert max-w-none whitespace-pre-line" >

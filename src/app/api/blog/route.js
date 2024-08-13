@@ -18,7 +18,7 @@ export async function GET(request) {
 
     // log the error
     if (error) {
-        console.error(error)
+        return NextResponse.json(error, {status: 200})
     }
 
     // Getting Individual Blog Data using the "id" query.
