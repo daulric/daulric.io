@@ -1,6 +1,5 @@
 "use client"
 
-
 export default function BetaPage({links}) {
     return (
         <div className="space-y-6">

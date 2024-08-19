@@ -3,14 +3,14 @@
 import { useState } from "react"
 import crypto from "crypto"
 
-export default function BetaAuthPage({setIsAuthenticated}) {
+export default function BetaAuthPage({setAuthed}) {
 
     const [password, setPassword] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (password === process.env.NEXT_PUBLIC_BETA_PWD) {
-            setIsAuthenticated(true);
+            setAuthed(true)
             document.cookie = `beta_access=${crypto.randomBytes(64).toString("hex")}`
         } else {
             alert('Incorrect password');
