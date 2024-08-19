@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import ytdl from 'ytdl-core';
 import { PassThrough } from 'stream';
-import pump from "pump"; // Or another stream handling library
+import pump from "pump";
 
 export async function POST(request: NextRequest) {
     const { url, format } = await request.json();
@@ -30,10 +30,10 @@ export async function POST(request: NextRequest) {
         const passThrough = new PassThrough();
 
         // Use pump to ensure complete data transfer
-        await pump(stream, passThrough);
+        let finalize = await pump(stream, passThrough);
 
         // Return a new Response object with the PassThrough stream
-        return new Response(passThrough as any, {
+        return new Response(finalize as any, {
             headers: responseHeaders,
         });
     } catch (error) {
