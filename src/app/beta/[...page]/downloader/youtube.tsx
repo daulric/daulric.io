@@ -6,31 +6,50 @@ export default function DownloadPage() {
   const [url, setUrl] = useState('');
   const [format, setFormat] = useState<'mp3' | 'mp4'>('mp4');
   const [message, setMessage] = useState<string | null>(null);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
-  
+
     try {
-      const res = await fetch('api/downloader/youtube', {
+      const res = await fetch('/api/downloader/youtube', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url: url, format: format }),
+        body: JSON.stringify({ url, format }),
       });
-  
+
+      setMessage("Preparing to Download...")
+
       if (res.ok) {
-        const blob = await res.blob();
+        setMessage("Downloading...");
+
+        const reader = res.body?.getReader();
+        const contentDisposition = res.headers.get('Content-Disposition');
+        const fileName = contentDisposition
+          ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') 
+          : `download.${format}`; // Fallback to a default filename if header is missing
+
+        const chunks = [];
+        if (reader) {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+          }
+        }
+
+        const blob = new Blob(chunks, { type: format === 'mp3' ? 'audio/mpeg' : 'video/mp4' });
         const downloadUrl = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.download = res.headers.get('Content-Disposition')?.split('filename=')[1].replace(/"/g, '') || `download.${format}`;
+        link.download = fileName;
         document.body.appendChild(link);
         link.click();
-        link.parentNode?.removeChild(link);
-        setMessage("Download started!");
+        link.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+        setMessage("Download Finished")
       } else {
         setMessage("An error occurred. Please try again.");
       }

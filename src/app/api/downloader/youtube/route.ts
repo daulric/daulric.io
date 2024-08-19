@@ -1,43 +1,51 @@
 import { NextRequest } from 'next/server';
-import ytdl from 'ytdl-core';
+import ytdl from '@distube/ytdl-core';
 import { PassThrough } from 'stream';
-import pump from "pump";
+
+function sanitizeFileName(fileName: string) {
+  return fileName.replace(/[^\x00-\x7F]/g, ''); // Replace non-ASCII characters with underscore
+}
 
 export async function POST(request: NextRequest) {
-    const { url, format } = await request.json();
+  const { url, format } = await request.json() as { url: string; format: 'mp3' | 'mp4' };
 
-    if (!url) {
-        return new Response(JSON.stringify({ message: 'URL is required' }), { status: 400 });
-    }
+  if (!url) {
+    return new Response(JSON.stringify({ message: 'URL is required' }), { status: 400 });
+  }
 
-    try {
-        const videoInfo = await ytdl.getInfo(url);
-        const videoTitle = videoInfo.videoDetails.title.replace(/[^\w\s]/gi, '');
-        const fileName = `${videoTitle}.${format}`;
+  try {
+    const isAudio = format === 'mp3';
+    const contentType = isAudio ? 'audio/mpeg' : 'video/mp4';
+    const filter = isAudio ? 'audioonly' : 'videoandaudio';
+    
+    const info = await ytdl.getInfo(url);
+    const originalFileName = `${info.videoDetails.title}.${isAudio ? 'mp3' : 'mp4'}`;
+    const sanitizedFileName = sanitizeFileName(originalFileName);
 
-        // Set up response headers
-        const responseHeaders = new Headers();
-        responseHeaders.set('Content-Disposition', `attachment; filename="${fileName}"`);
-        responseHeaders.set('Content-Type', format === 'mp3' ? 'audio/mpeg' : 'video/mp4');
+    const stream = ytdl(url, {
+      filter,
+      quality: 'highestaudio',
+    });
 
-        // Create a ReadableStream from ytdl
-        const stream = ytdl(url, {
-            filter: format === 'mp3' ? 'audioonly' : 'videoandaudio',
-            quality: format === 'mp3' ? 'highestaudio' : 'highest',
-        });
+    const passThrough = new PassThrough();
+    stream.pipe(passThrough);
 
-        // Create a PassThrough stream to properly handle the stream piping
-        const passThrough = new PassThrough();
+    const headers = new Headers({
+      'Content-Type': contentType,
+      'Content-Disposition': `attachment; filename="${sanitizedFileName}"`,
+    });
 
-        // Use pump to ensure complete data transfer
-        let finalize = await pump(stream, passThrough);
-
-        // Return a new Response object with the PassThrough stream
-        return new Response(finalize as any, {
-            headers: responseHeaders,
-        });
-    } catch (error) {
-        console.error('Error downloading video:', error);
-        return new Response(JSON.stringify({ message: 'Error downloading video' }), { status: 500 });
-    }
+    return new Response(new ReadableStream({
+      start(controller) {
+        passThrough.on('data', (chunk) => controller.enqueue(chunk));
+        passThrough.on('end', () => controller.close());
+        passThrough.on('error', (err) => controller.error(err));
+      },
+    }), {
+      headers,
+    });
+  } catch (error) {
+    console.error('Error downloading video:', error);
+    return new Response(JSON.stringify({ message: 'Error downloading video: ' + (error as Error).message }), { status: 500 });
+  }
 }
