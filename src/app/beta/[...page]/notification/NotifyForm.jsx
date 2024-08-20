@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-export default function NotificationForm({ onLogout }) {
+export default function NotificationForm() {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
 
@@ -53,12 +53,6 @@ export default function NotificationForm({ onLogout }) {
             className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
           >
             Publish Notification
-          </button>
-          <button 
-            onClick={onLogout} 
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-          >
-            Logout
           </button>
         </div>
       </div>

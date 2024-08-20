@@ -12,4 +12,5 @@ module.exports = [
         { text: "Message", link: "/message", image: "/nav/message.png" }
       ]
     },
+    {text: "Beta Testing", link: "/beta", image: "/nav/beta.png"},
 ]
