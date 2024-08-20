@@ -1,13 +1,14 @@
 import { NextRequest } from 'next/server';
+import { google } from 'googleapis';
 import ytdl from '@distube/ytdl-core';
 import { PassThrough } from 'stream';
 
 function sanitizeFileName(fileName: string) {
-  return fileName.replace(/[^\x00-\x7F]/g, ''); // Replace non-ASCII characters with underscore
+  return fileName.replace(/[^\x00-\x7F]/g, ''); // Replace non-ASCII characters with empty string
 }
 
 export async function POST(request: NextRequest) {
-  const { url, format } = await request.json() as { url: string; format: 'mp3' | 'mp4' };
+  const { url, format } = (await request.json()) as { url: string; format: 'mp3' | 'mp4' };
 
   if (!url) {
     return new Response(JSON.stringify({ message: 'URL is required' }), { status: 400 });
@@ -17,14 +18,17 @@ export async function POST(request: NextRequest) {
     const isAudio = format === 'mp3';
     const contentType = isAudio ? 'audio/mpeg' : 'video/mp4';
     const filter = isAudio ? 'audioonly' : 'videoandaudio';
-    
-    const info = await ytdl.getInfo(url);
-    const originalFileName = `${info.videoDetails.title}.${isAudio ? 'mp3' : 'mp4'}`;
+
+    // Use YouTube Data API to get video details
+    const videoId = extractVideoId(url);
+    const videoDetails = await getVideoDetails(videoId);
+
+    const originalFileName = `${videoDetails.title}.${isAudio ? 'mp3' : 'mp4'}`;
     const sanitizedFileName = sanitizeFileName(originalFileName);
 
     const stream = ytdl(url, {
       filter,
-      quality: 'highestaudio',
+      quality: isAudio ? 'highestaudio' : 'highest',
     });
 
     const passThrough = new PassThrough();
@@ -48,4 +52,41 @@ export async function POST(request: NextRequest) {
     console.error('Error downloading video:', error);
     return new Response(JSON.stringify({ message: 'Error downloading video: ' + (error as Error).message }), { status: 500 });
   }
+}
+
+// Helper to extract video ID from URL
+function extractVideoId(url: string): string {
+  const urlObj = new URL(url);
+  const videoId = urlObj.searchParams.get('v');
+  if (!videoId) {
+    throw new Error('Invalid YouTube URL');
+  }
+  return videoId;
+}
+
+// Use YouTube Data API to get video details
+async function getVideoDetails(videoId: string) {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (!apiKey) {
+    throw new Error('YouTube API key not set');
+  }
+
+  const youtube = google.youtube({
+    version: 'v3',
+    auth: apiKey,
+  });
+
+  const response = await youtube.videos.list({
+    id: [videoId],
+    part: ['snippet'],
+  });
+
+  const video = response.data.items?.[0];
+  if (!video) {
+    throw new Error('Video not found');
+  }
+
+  return {
+    title: video.snippet?.title || 'download',
+  };
 }
