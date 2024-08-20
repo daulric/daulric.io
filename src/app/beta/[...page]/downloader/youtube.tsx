@@ -9,7 +9,7 @@ export default function DownloadPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage(null);
+    setMessage("Preparing to Download...")
 
     try {
       const res = await fetch('/api/downloader/youtube', {
@@ -19,8 +19,6 @@ export default function DownloadPage() {
         },
         body: JSON.stringify({ url, format }),
       });
-
-      setMessage("Preparing to Download...")
 
       if (res.ok) {
         setMessage("Downloading...");

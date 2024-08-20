@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import ytdl from '@distube/ytdl-core';
 import { PassThrough } from 'stream';
@@ -7,11 +7,17 @@ function sanitizeFileName(fileName: string) {
   return fileName.replace(/[^\x00-\x7F]/g, ''); // Replace non-ASCII characters with empty string
 }
 
+export async function GET () {
+  return NextResponse.json({
+    message: "ok",
+  }, {status: 200});
+}
+
 export async function POST(request: NextRequest) {
   const { url, format } = (await request.json()) as { url: string; format: 'mp3' | 'mp4' };
 
   if (!url) {
-    return new Response(JSON.stringify({ message: 'URL is required' }), { status: 400 });
+    return new NextResponse(JSON.stringify({ message: 'URL is required' }), { status: 400 });
   }
 
   try {
@@ -39,7 +45,7 @@ export async function POST(request: NextRequest) {
       'Content-Disposition': `attachment; filename="${sanitizedFileName}"`,
     });
 
-    return new Response(new ReadableStream({
+    return new NextResponse(new ReadableStream({
       start(controller) {
         passThrough.on('data', (chunk) => controller.enqueue(chunk));
         passThrough.on('end', () => controller.close());
@@ -50,7 +56,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error downloading video:', error);
-    return new Response(JSON.stringify({ message: 'Error downloading video: ' + (error as Error).message }), { status: 500 });
+    return new NextResponse(JSON.stringify({ message: 'Error downloading video: ' + (error as Error).message }), { status: 500 });
   }
 }
 

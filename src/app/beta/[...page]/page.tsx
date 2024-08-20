@@ -16,4 +16,5 @@ export default function BetaComponentPage({params}: {params: {page: [string]}}) 
         return <YoutubeDownloader />
     }
 
+    return <NotFound status="Not Found" text="Page Not Found. Try again when released!" />
 }
