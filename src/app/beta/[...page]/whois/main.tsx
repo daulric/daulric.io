@@ -47,7 +47,7 @@ export default function WhoisPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">WHOIS Lookup</h1>
+      <h1 className="text-2xl font-bold mb-4" "text-center">WHOIS Lookup</h1>
       <form onSubmit={handleSubmit} className="mb-4">
         <input
           type="text"
