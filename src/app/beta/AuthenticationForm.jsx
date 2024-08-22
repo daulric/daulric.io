@@ -1,15 +1,25 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import crypto from "crypto"
+import {SupabaseClient} from "@/components/SupabaseClient"
 
 export default function BetaAuthPage({setAuthed}) {
 
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const supa_db = SupabaseClient();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password === process.env.NEXT_PUBLIC_BETA_PWD) {
+        let secret;
+        // Handling Password
+        const {data, error} = await supa_db.from("live_creds").select("*").eq("name", "beta_pwd");
+        if (error) console.log(error);
+        secret = data[0].secret;
+
+        // Handling Auth
+        if (password === secret) {
             setAuthed(true)
             document.cookie = `beta_access=${crypto.randomBytes(64).toString("hex")}`
         } else {
