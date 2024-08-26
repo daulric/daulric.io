@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { unstable_noStore as noStore } from 'next/cache';
+import axios from "axios";
 
 function LoadImage(props) {
     const image = props.image
@@ -28,17 +29,18 @@ function LoadImage(props) {
 
 async function GetImages() {
     noStore()
-    const response = await fetch(`/api/pictures?descending=true`, {
-        method: "GET",
+    const response = await axios.get("/api/pictures", {
+        params: {
+            descending: true
+        }
     })
 
-    if (!response.ok) {
+    if (response.status === 500) {
         console.log("Error fetching Images")
         return [];
     }
 
-    const data = await response.json();
-    console.log(data)
+    const data = response.data;
     return data
 }
 

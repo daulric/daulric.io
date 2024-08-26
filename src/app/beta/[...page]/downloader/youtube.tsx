@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import axios from "axios"
 
 export default function DownloadPage() {
   const [url, setUrl] = useState('');
@@ -9,36 +10,28 @@ export default function DownloadPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("Preparing to Download...")
-
+    setMessage("Preparing to Download...");
+  
     try {
-      const res = await fetch('/api/downloader/youtube', {
-        method: 'POST',
+      const res = await axios.post('/api/downloader/youtube', {
+        url,
+        format
+      }, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url, format }),
+        responseType: 'blob', // Expect a binary response (Blob)
       });
-
-      if (res.ok) {
+  
+      if (res.status >= 200 && res.status < 300) {
         setMessage("Downloading...");
-
-        const reader = res.body?.getReader();
-        const contentDisposition = res.headers.get('Content-Disposition');
+  
+        const contentDisposition = res.headers['content-disposition'];
         const fileName = contentDisposition
           ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') 
           : `download.${format}`; // Fallback to a default filename if header is missing
-
-        const chunks = [];
-        if (reader) {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-          }
-        }
-
-        const blob = new Blob(chunks, { type: format === 'mp3' ? 'audio/mpeg' : 'video/mp4' });
+  
+        const blob = new Blob([res.data], { type: format === 'mp3' ? 'audio/mpeg' : 'video/mp4' });
         const downloadUrl = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadUrl;
@@ -47,7 +40,7 @@ export default function DownloadPage() {
         link.click();
         link.remove();
         window.URL.revokeObjectURL(downloadUrl);
-        setMessage("Download Finished")
+        setMessage("Download Finished");
       } else {
         setMessage("An error occurred. Please try again.");
       }
@@ -56,6 +49,7 @@ export default function DownloadPage() {
       setMessage("An error occurred. Please try again.");
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-100">

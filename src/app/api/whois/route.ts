@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import axios, { Axios } from "axios"
 
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
@@ -15,14 +16,18 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const fetched = await fetch(`https://api.api-ninjas.com/v1/whois?domain=${domain}`, {
+        const fetched = await axios.get("https://api.api-ninjas.com/v1/whois", {
+            params: {
+                domain: domain,
+            },
+
             headers: {
                 "X-Api-Key": api_key,
             }
-        });
+        })
 
-        if (fetched.ok) {
-            const data = await fetched.json();
+        if (fetched.status === 200) {
+            const data = await fetched.data;
             return NextResponse.json(data, { status: 200 });
         } else {
             return NextResponse.json({ error: 'Failed to fetch WHOIS data' }, { status: fetched.status });

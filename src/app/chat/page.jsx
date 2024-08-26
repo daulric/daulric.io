@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkDown from "react-markdown"
 import crypto from "crypto"
+import axios from "axios"
 
 export default function Chat() {
     const [messages, setMessages] = useState([]);
@@ -33,15 +34,15 @@ export default function Chat() {
         const userMessage = { user: 'You', text: input };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-        const response = await fetch('/api/chat', {
-            method: 'POST',
+        const {data} = await axios.post("/api/chat", {
+            message: input, 
+            id: cookieStore["chat_key"]
+        }, {
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: input, id: cookieStore["chat_key"] }),
-        });
+            }
+        })
     
-        const data = await response.json();
         const aiMessage = { user: 'dabot', text: data.response };
         setMessages((prevMessages) => [...prevMessages,  aiMessage]);
     };

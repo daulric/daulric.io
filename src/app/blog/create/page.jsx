@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation"
+import axios from "axios"
 
 export const metadata = {
   title: "Blog - Create",
@@ -10,19 +11,15 @@ async function handlePost( FormData) {
 
   const { title, content } = Object.fromEntries(FormData)
 
-  const data  = await fetch(`${process.env.NEXT_URL}/api/blog`, {
-    method: "POST",
-    body: JSON.stringify({
-      title: title,
-      content: content,
-    })
+  const {data: blog_data, status} = await axios.post(`${process.env.NEXT_URL}/api/blog`, {
+    title: title,
+    content: content,
   })
 
-  if (data.ok) {
-      const blog_data = await data.json()
-      redirect(`/blog/${blog_data.blog_id}`)
-  } else {
+  if (status === 500) {
     throw new Error("Error Creating Post")
+  } else {
+    redirect(`/blog/${blog_data.blog_id}`)
   }
 
 }

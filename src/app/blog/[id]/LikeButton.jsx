@@ -1,19 +1,18 @@
 "use client"
 import { useState, useEffect } from "react";
+import axios from "axios"
 
 export default function LikeButton({id}) {
     const [likes, setLikes] = useState(0);
     const [liked, setLiked] = useState(false);
 
     useEffect(() => {
-      fetch(`/blog/${id}/likes`, {
-        method: 'GET',
-      })
+      axios.get(`/blog/${id}/likes`)
         .then((response) => {
-          if (!response.ok) {
+          if (response.status !== 200) {
             throw new Error('Network response was not ok');
           }
-          return response.json();
+          return response.data;
         })
         .then((likes_data) => {
           setLikes(likes_data.likes);
@@ -24,14 +23,10 @@ export default function LikeButton({id}) {
     }, [id]);
 
     const setLike = (increment) => {
-      fetch(`/blog/${id}/likes`, {
-        method: "POST",
-        body: JSON.stringify({
+      axios.post(`/blog/${id}/likes`, {
           increment: increment,
-        })
-      }).then((response) => response.json()).then((data) => {
+      }).then((response) => response.data).then((data) => {
         if (data.success === true) {
-
           if (increment === true) {
             setLikes(likes + 1);
             setLiked(increment);
@@ -39,7 +34,6 @@ export default function LikeButton({id}) {
             setLikes(likes - 1);
             setLiked(increment);
           }
-
         }
       }).catch((error) => console.log(error));
     }

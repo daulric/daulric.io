@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation"
+import axios from "axios"
 
 export const metadata = {
   title: "Message",
@@ -9,24 +10,22 @@ async function SendMessage(FormData) {
   "use server"
   const { name, message } = Object.fromEntries(FormData)
 
-  const response = await fetch(`${process.env.NEXT_URL}/api/message`, {
-    method: "POST",
+  
+
+  const response = await axios.post(`${process.env.NEXT_URL}/api/message`, {
+    name: name,
+    message: message,
+  }, {
     headers: {
-      'Content-Type': 'application/json',
-    },
-
-    body: JSON.stringify({
-      name: name,
-      message: message,
-    })
-
+      "Content-Type": "application/json"
+    }
   })
 
-  if (!response.ok) {
+  if (response.status === 500) {
     return redirect("/message/failed")
   }
 
-  const data = await response.json()
+  const data = response.data
 
   switch (data.success) {
     case true:

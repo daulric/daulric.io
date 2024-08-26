@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { unstable_noStore as noStore } from "next/cache"
+import axios from "axios"
 
 import Markdown from 'react-markdown';
 import LikeButton from "./LikeButton"
@@ -12,15 +13,15 @@ export const metadata = {
 async function getBlogPost(id) {
   noStore()
 
-  const data = await fetch(`${process.env.NEXT_URL}/api/blog?id=${id}`, {
-    method: "GET",
+  const {data : blog, status} = await axios.get(`${process.env.NEXT_URL}/api/blog`, {
+    params: {
+      id: id,
+    }
   })
 
-  if (!data.ok) {
+  if (status !== 200) {
     return null
   }
-
-  const blog = await data.json()
 
   if (!blog || blog.length === 0 ) {
     return null;

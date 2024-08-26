@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react';
+import axios from "axios";
 
 interface WhoisData {
   domain_name: string;
@@ -33,12 +34,15 @@ export default function WhoisPage() {
     setLoading(true);
     setWhoisData(null);
 
-    const response = await fetch(`/api/whois?domain=${url}`);
+    const response = await axios.get("/api/whois", {
+      params: {
+        domain: url,
+      },
+    })
 
     if (response.status === 200) {
-      const data = await response.json();
+      const data = await response.data;
       setWhoisData(data);
-
     }
 
     setLoading(false);

@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { unstable_noStore as noStore } from "next/cache"
 import Markdown from "react-markdown"
+import axios from "axios"
 
 export const metadata = {
     title: "Blogs",
@@ -10,12 +11,14 @@ export const metadata = {
 const getBlogs = async () => {
     noStore()
 
-    const data = await fetch(`${process.env.NEXT_URL}/api/blog?descending=true`, {
-        method: "GET",
+    const {data, status} = await axios.get(`${process.env.NEXT_URL}/api/blog`, {
+        params: {
+            descending: true,
+        }
     })
 
-    if (data.ok) {
-        return data.json()
+    if (status === 200) {
+        return data
     } else {
         throw new Error("daulric den blog server error")
     }

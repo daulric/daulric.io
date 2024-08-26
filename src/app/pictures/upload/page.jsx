@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from "next/navigation"
+import axios from "axios"
 
 export default function UploadPage() {
 
@@ -37,16 +38,17 @@ export default function UploadPage() {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('/api/pictures', {
-      method: 'POST',
-      body: formData,
-    });
+    
 
-    if (!response.ok) {
+    const response = await axios.postForm('/api/pictures', {
+      file: file,
+    })
+
+    if (response.status === 500) {
       setUploadStatus('Connection Failed!');
     }
 
-    let {success, error} = await response.json();
+    let {success, error} = response.data;
 
     if (success === true) {
       setUploadStatus('File uploaded successfully!')
