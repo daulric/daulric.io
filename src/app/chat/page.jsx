@@ -34,17 +34,28 @@ export default function Chat() {
         const userMessage = { user: 'You', text: input };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-        const {data} = await axios.post("/api/chat", {
+        axios.post("/api/chat", {
             message: input, 
             id: cookieStore["chat_key"]
         }, {
             headers: {
                 'Content-Type': 'application/json',
+                chat_id: cookieStore["chat_key"],
             }
+        }).then(response  => {
+            data = response.data;
+            console.log("Data Accepted:", data)
+
+            const aiMessage = { 
+                user: 'dabot', 
+                text: data.response
+            };
+
+            setMessages((prevMessages) => [...prevMessages,  aiMessage]);
         })
-    
-        const aiMessage = { user: 'dabot', text: data.response };
-        setMessages((prevMessages) => [...prevMessages,  aiMessage]);
+        .catch(e => {
+            console.log(e)
+        })
     };
 
     useEffect(() => {

@@ -61,33 +61,43 @@ export async function POST(request) {
         generationConfig: {},
     });
 
-    // Output the given response to the message
-    const result = await chat.sendMessage(message);
-    const response = result.response.text();
+    try {
+        // Output the given response to the message
+        const result = await chat.sendMessage(message);
+        const response = result.response.text();
 
-    // Storing Data
-    Chat_History.map((history) => {
-        
-        if (history.role === "user") {
-            history.parts.push({text: message})
-        }
+        // Storing Data
+        Chat_History.map((history) => {
+            
+            if (history.role === "user") {
+                history.parts.push({text: message})
+            }
 
-        if (history.role === "model") {
-            history.parts.push({text: response})
-        }
-    })
+            if (history.role === "model") {
+                history.parts.push({text: response})
+            }
+        })
 
-    // Update the chat history
-    chat_db.upsert({
-        chat_id: id,
-        chat_history: JSON.stringify(Chat_History)
-    }).then(() => console.log("data updated", id))
+        // Update the chat history
+        chat_db.upsert({
+            chat_id: id,
+            chat_history: JSON.stringify(Chat_History)
+        }).then(() => console.log("data updated", id))
 
-    // Return the AI Response
-    return NextResponse.json({
-        response: response,
-    }, {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-    })
+        // Return the AI Response
+        return NextResponse.json({
+            response: response,
+        }, {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+    } catch(e) {
+        return NextResponse.json({
+            response: "Google is not allowing these type of questions. Dont blame me.😊\n This question/statement will not be stored in your chat history.",
+        }, {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+        })
+    }
 }
