@@ -9,7 +9,6 @@ export async function POST(request) {
     const {name, message} = await request.json();
 
     // Send the message to the chat service via webhook
-
     const data = await axios.post(process.env.discord_webhook, {
         username: name,
         content: message,
