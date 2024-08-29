@@ -63,6 +63,7 @@ export async function POST(request) {
 
     // Output the given response to the message
     const result = await chat.sendMessage(message);
+
     const response = result.response.text();
 
     // Storing Data
