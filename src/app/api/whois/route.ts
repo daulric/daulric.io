@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
         if (fetched.status === 200) {
             const data = await fetched.data;
             return NextResponse.json(data, { status: 200 });
-
         } else {
             return NextResponse.json({ error: 'Failed to fetch WHOIS data' }, { status: fetched.status });
         }
