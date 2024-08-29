@@ -16,6 +16,7 @@ export async function GET () {
 export async function POST(request: NextRequest) {
   const { url, format } = (await request.json()) as { url: string; format: 'mp3' | 'mp4' };
 
+  // Check if url exsists!
   if (!url) {
     return new NextResponse(JSON.stringify({ message: 'URL is required' }), { status: 400 });
   }
@@ -32,19 +33,23 @@ export async function POST(request: NextRequest) {
     const originalFileName = `${videoDetails.title}.${isAudio ? 'mp3' : 'mp4'}`;
     const sanitizedFileName = sanitizeFileName(originalFileName);
 
+    // Gets a stream from the ytdl package!
     const stream = ytdl(url, {
       filter,
       quality: isAudio ? 'highestaudio' : 'highest',
     });
 
+    // Creates a pipeline
     const passThrough = new PassThrough();
     stream.pipe(passThrough);
 
+    // Headers request for the incoming stream
     const headers = new Headers({
       'Content-Type': contentType,
       'Content-Disposition': `attachment; filename="${sanitizedFileName}"`,
     });
 
+    // Returns a readable stream
     return new NextResponse(new ReadableStream({
       start(controller) {
         passThrough.on('data', (chunk) => controller.enqueue(chunk));
@@ -57,6 +62,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error downloading video:', error);
     return new NextResponse(JSON.stringify({ message: 'Error downloading video: ' + (error as Error).message }), { status: 500 });
+    // Return any errors that may occur!
   }
 }
 

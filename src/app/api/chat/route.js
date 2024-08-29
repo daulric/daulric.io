@@ -82,9 +82,9 @@ export async function POST(request) {
     chat_db.upsert({
         chat_id: id,
         chat_history: JSON.stringify(Chat_History)
-    }).then(() => console.log(`chat history updated with id ${id}`))
+    }).then(() => console.log(`chat history updated with id ${id}`)) // Consoles the chat id when the history is updated
 
-    // Return the AI Response
+    // Return the AI Responses
     return NextResponse.json({
         response: response,
     }, {

@@ -28,6 +28,7 @@ export async function GET(request) {
         db_data.sort((a, b) => b.data.created_at.localeCompare(a.data.created_at))
     }
     
+    // Returns the data.
     return NextResponse.json(db_data, {status: 200})
 }
 
