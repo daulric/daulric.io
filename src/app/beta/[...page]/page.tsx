@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import YoutubeDownloader from "./downloader/youtube"
 import NotificationsPage from "./notification/notification";
 import WhoIs from "./whois/main"
-import AiImage from "./image_generator/generator"
+import AiImage from "../../../components/History/image_generator/generator"
 
 export default function BetaComponentPage({params}: {params: {page: [string]}}) {
     let page = params ? params.page : [];
