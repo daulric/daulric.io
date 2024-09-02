@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import YoutubeDownloader from "./downloader/youtube"
 import NotificationsPage from "./notification/notification";
 import WhoIs from "./whois/main"
+import IncomeManager from "./income_handler/income"
 
 export default function BetaComponentPage({params}: {params: {page: [string]}}) {
     let page = params ? params.page : [];
@@ -15,7 +16,6 @@ export default function BetaComponentPage({params}: {params: {page: [string]}}) 
     if (typeof (authorizationCookie?.value) === "undefined") {
         return <NotFound status="Access Denied" text="Bruh You Think You Slick! Click Here" link="/beta" linkText="Click to Login for Beta Access" />
     }
-    console.log(params.page)
 
     switch (main_index) {
         case "downloader":
@@ -27,6 +27,9 @@ export default function BetaComponentPage({params}: {params: {page: [string]}}) 
         
         case "whois":
             if (!page[1]) return <WhoIs />
+
+        case "income":
+            if (!page[1]) return <IncomeManager />
 
         default:
             return <NotFound status="Not Found" text="Page Not Found. Return To Beta Home Page" link="/beta" linkText="Return Beta" />
