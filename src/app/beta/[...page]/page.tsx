@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import YoutubeDownloader from "./downloader/youtube"
 import NotificationsPage from "./notification/notification";
 import WhoIs from "./whois/main"
-import AiImage from "../../../components/History/image_generator/generator"
 
 export default function BetaComponentPage({params}: {params: {page: [string]}}) {
     let page = params ? params.page : [];
@@ -28,10 +27,6 @@ export default function BetaComponentPage({params}: {params: {page: [string]}}) 
         
         case "whois":
             if (!page[1]) return <WhoIs />
-
-        case "ai":
-            if (!page[1]) return <NotFound text="Ai Product not Found" link="/beta" linkText="Return the Beta Home" />
-            if (page[1] === "image") return <AiImage />
 
         default:
             return <NotFound status="Not Found" text="Page Not Found. Return To Beta Home Page" link="/beta" linkText="Return Beta" />
