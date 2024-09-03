@@ -10,8 +10,6 @@ async function SendMessage(FormData) {
   "use server"
   const { name, message } = Object.fromEntries(FormData)
 
-  
-
   const response = await axios.post(`${process.env.NEXT_URL}/api/message`, {
     name: name,
     message: message,
@@ -38,7 +36,6 @@ async function SendMessage(FormData) {
       return redirect("/message/failed")
   }
 }
-
 
 export default function MessagePage() {
     return (
