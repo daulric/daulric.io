@@ -4,6 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import ReactMarkDown from "react-markdown"
 import crypto from "crypto"
 import axios from "axios"
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
+import "./chat.css";
 
 export default function Chat() {
     const [messages, setMessages] = useState([]);
@@ -79,7 +82,7 @@ export default function Chat() {
                             } p-2 md:p-4 w-full`}
                         >
                             <strong className="text-sm md:text-base">{msg.user}:</strong>
-                            <ReactMarkDown className="text-sm md:text-base font-normal break-words whitespace-pre-wrap">
+                            <ReactMarkDown rehypePlugins={[rehypeHighlight]}  className="text-sm md:text-base font-normal break-words whitespace-pre-wrap" options={{ syntaxHighlighting: true }}>
                                 {msg.text}
                             </ReactMarkDown>
                         </div>
