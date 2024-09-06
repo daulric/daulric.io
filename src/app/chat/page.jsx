@@ -1,114 +1,126 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import ReactMarkDown from "react-markdown"
-import crypto from "crypto"
-import axios from "axios"
+import ReactMarkdown from "react-markdown";
+import crypto from "crypto";
+import axios from "axios";
 import rehypeHighlight from 'rehype-highlight';
-import 'highlight.js/styles/github.css';
-import "./chat.css";
+import 'highlight.js/styles/github-dark.css';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import { Send } from "lucide-react";
 
 export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
-    const chatWindowRef = useRef(null);
+    const scrollAreaRef = useRef(null);
     
-    let cookieStore = {}
+    let cookieStore = {};
 
     useEffect(() => {
         let cookies = document.cookie.split(';');
 
         cookies.forEach(cookie => {
-            let [name, value] = cookie.split('=')
-            cookieStore[name] = value
-        })
+            let [name, value] = cookie.split('=');
+            console.log(name, value);
+            cookieStore[name] = value;
+        });
 
         if (!cookieStore["chat_key"]) {
-            let key = crypto.randomBytes(32).toString("hex")
-            document.cookie = `chat_key=${key}`
+            let key = crypto.randomBytes(32).toString("hex");
+            document.cookie = `chat_key=${key}`;
             cookieStore["chat_key"] = key;
-            console.log("created!")
+            console.log("created!");
         }
-    }, [cookieStore])
+    }, [cookieStore]);
 
     const sendMessage = async () => {
         if (!input) return;
-        setInput('')
+        setInput('');
         const userMessage = { user: 'You', text: input };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-        const {data} = await axios.post("/api/chat", {
-            message: input, 
-            id: cookieStore["chat_key"]
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-    
-        const aiMessage = { user: 'dabot', text: data.response };
-        setMessages((prevMessages) => [...prevMessages,  aiMessage]);
+        try {
+            const { data } = await axios.post("/api/chat", {
+                message: input, 
+                id: cookieStore["chat_key"]
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+        
+            const aiMessage = { user: 'dabot', text: data.response };
+            setMessages((prevMessages) => [...prevMessages, aiMessage]);
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
     };
 
     useEffect(() => {
-        if (chatWindowRef.current) {
-            chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+        if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
         }
     }, [messages]);
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     };
 
     return (
-        <div className="flex flex-col h-screen bg-gray-900 text-white p-3">
-            <div className="flex-shrink-0 mb-3 text-center"> {}
+        <Card className="flex flex-col h-screen bg-gray-900 text-gray-100 border-none shadow-none">
+            <CardHeader className="text-center border-b border-gray-800">
                 <h1 className="text-2xl font-bold">Chat with AI</h1>
-            </div>
+            </CardHeader>
             
-            <div className="flex-grow flex flex-col overflow-hidden bg-gray-800 rounded-lg shadow-lg">
-                <div 
-                    className="flex-grow overflow-y-auto p-3 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
-                    ref={chatWindowRef}
-                >
+            <CardContent className="flex-grow overflow-hidden bg-gray-800 p-0">
+                <ScrollArea className="h-full p-4" ref={scrollAreaRef}>
                     {messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={`message mb-3 ${
+                            className={`mb-4 ${
                                 msg.user === 'You' ? 'text-right' : 'text-left'
-                            } p-2 md:p-4 w-full`}
+                            }`}
                         >
-                            <strong className="text-sm md:text-base">{msg.user}:</strong>
-                            <ReactMarkDown rehypePlugins={[rehypeHighlight]}  className="text-sm md:text-base font-normal break-words whitespace-pre-wrap" options={{ syntaxHighlighting: true }}>
-                                {msg.text}
-                            </ReactMarkDown>
+                            <div className={`inline-block max-w-[80%] ${
+                                msg.user === 'You' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-100'
+                            } rounded-lg p-3`}>
+                                <p className="font-semibold">{msg.user}</p>
+                                <ReactMarkdown 
+                                    rehypePlugins={[rehypeHighlight]}  
+                                    className="text-sm break-words whitespace-pre-wrap"
+                                >
+                                    {msg.text}
+                                </ReactMarkdown>
+                            </div>
                         </div>
                     ))}
-                </div>
-                
-                <div className="flex p-3 bg-gray-700">
-                    <input
-                        type="text"
-                        className="flex-grow p-2 bg-gray-600 border border-gray-500 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                </ScrollArea>
+            </CardContent>
+            
+            <CardFooter className="p-4 bg-gray-800 border-t border-gray-700">
+                <div className="flex w-full space-x-2">
+                    <Input
+                        className="flex-grow bg-gray-700 text-gray-100 border-gray-600 focus:border-blue-500"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder='Enter Message'
                     />
-                    <button
-                        className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 text-sm"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            sendMessage();
-                        }}
+                    <Button 
+                        onClick={sendMessage}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
                     >
+                        <Send className="w-4 h-4 mr-2" />
                         Send
-                    </button>
+                    </Button>
                 </div>
-            </div>
-        </div>
+            </CardFooter>
+        </Card>
     );
 }
