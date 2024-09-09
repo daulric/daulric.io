@@ -4,7 +4,6 @@ import { unstable_noStore as noStore } from "next/cache";
 import axios from "axios";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock } from 'lucide-react';
 
 export const metadata = {
@@ -43,13 +42,10 @@ function BlogCard({ blog }) {
     const contentSnippet = getContentSnippet(blog.content);
 
     return (
-        <Card className="bg-gray-800 shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <Card className="bg-gray-800 shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border-gray-700">
             <CardHeader className="border-b border-gray-700">
                 <div className="flex justify-between items-start">
                     <h3 className="text-xl font-semibold text-gray-100">{blog.title}</h3>
-                    <Badge variant="secondary" className="bg-blue-600 text-white">
-                        {blog.category}
-                    </Badge>
                 </div>
                 <div className="flex items-center space-x-4 text-sm text-gray-400 mt-2">
                     <div className="flex items-center">
@@ -65,7 +61,7 @@ function BlogCard({ blog }) {
             <CardContent className="py-4">
                 <p className="text-gray-300">{contentSnippet}</p>
             </CardContent>
-            <CardFooter className="bg-gray-750 border-t border-gray-700">
+            <CardFooter className="bg-gray-750 border-t border-gray-700 flex justify-center items-center">
                 <Button variant="ghost" asChild className="text-blue-400 hover:text-blue-300 hover:bg-gray-700">
                     <Link href={`/blog/${blog.blog_id}`}>
                         Read more

@@ -16,23 +16,25 @@ export const metadata = {
 async function handlePost(formData) {
   "use server";
 
-  const { title, content } = Object.fromEntries(formData);
+  const { title, content } = Object.fromEntries(formData); // Capture data from the form.
 
-  try {
-    const { data: blog_data, status } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, {
-      title: title,
-      content: content,
-    });
+  // Posting the Form data
+  const { data: blog_data, status } = await axios.post(`${process.env.NEXT_URL}/api/blog`, {
+    title: title,
+    content: content,
+  });
 
-    if (status === 200) {
-      redirect(`/blog/${blog_data.blog_id}`);
-    } else {
-      throw new Error("Unexpected status code");
-    }
-  } catch (error) {
-    console.error("Error creating post:", error);
-    throw new Error("Error Creating Post");
+  if (blog_data === null || blog_data.blog_id === null) {
+    console.log("Error Retrieving Posted Data!") // This should rarely happen!
+    return
   }
+
+  if (status !== 200) {
+    console.log("Unexpected status code") // This should always return 200.
+    return
+  }
+
+  return redirect(`/blog/${blog_data.blog_id}`); // Redirects to the given blog id.
 }
 
 export default function CreateBlog() {
