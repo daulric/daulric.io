@@ -56,13 +56,13 @@ export default async function BlogPost({ params }) {
               <LikeButton id={params.id} />
             </div>
           </CardHeader>
-          <Separator className="bg-gray-700" />
+          <Separator className="bg-gray-800" />
           <CardContent className="pt-6">
             <Markdown className="prose prose-invert max-w-none whitespace-pre-line text-gray-100">
               {blog.content}
             </Markdown>
           </CardContent>
-          <Separator className="bg-gray-700" />
+          <Separator className="bg-gray-800" />
           <CardFooter className="justify-center pt-6">
             <Button variant="ghost" asChild className="text-blue-400 hover:text-blue-300 hover:bg-gray-700">
               <Link href="/blog">
