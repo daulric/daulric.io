@@ -52,11 +52,6 @@ const Navbar = ({ children }) => {
     <div className="flex min-h-screen bg-gray-900 text-gray-100">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex w-64 flex-col bg-gray-800 border-r border-gray-800">
-        <div className="p-4 border-b border-gray-700">
-          <Link href="/" className="flex items-center py-4 px-2">
-            {/* Add your logo here */}
-          </Link>
-        </div>
         <nav className="flex-1 overflow-y-auto py-4">
           {NavLinks.map((nav, index) => (
             <NavItem key={index} {...nav} />
@@ -72,11 +67,6 @@ const Navbar = ({ children }) => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-64 p-0 bg-gray-800 border-r border-gray-700">
-          <div className="p-4 border-b border-gray-700">
-            <Link href="/" className="flex items-center py-4 px-2">
-              {/* Add your logo here */}
-            </Link>
-          </div>
           <nav className="flex-1 overflow-y-auto py-4">
             {NavLinks.map((nav, index) => (
               <NavItem key={index} {...nav} isMobile={true} />
