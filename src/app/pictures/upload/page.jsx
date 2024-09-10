@@ -1,16 +1,19 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { useRouter } from "next/navigation"
-import axios from "axios"
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Upload } from "lucide-react";
 
 export default function UploadPage() {
-
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [uploadStatus, setUploadStatus] = useState(null);
   const fileInputRef = useRef(null);
-
   const router = useRouter();
 
   const handleFileChange = (event) => {
@@ -31,99 +34,72 @@ export default function UploadPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) {
-      setUploadStatus('Please select a file first.');
+      setUploadStatus('Please select a image first.');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
 
-    
+      const response = await axios.postForm('/api/pictures', formData);
 
-    const response = await axios.postForm('/api/pictures', {
-      file: file,
-    })
-
-    if (response.status === 500) {
+      if (response.data.success) {
+        setUploadStatus('File uploaded successfully!');
+        setTimeout(() => {
+          router.push("/pictures");
+        }, 1000);
+      } else {
+        setUploadStatus(`Upload Failed. ${response.data.error?.message || 'Please try again.'}`);
+      }
+    } catch (error) {
       setUploadStatus('Connection Failed!');
     }
-
-    let {success, error} = response.data;
-
-    if (success === true) {
-      setUploadStatus('File uploaded successfully!')
-      setTimeout(() => {
-        router.push("/pictures")
-      }, 1000)
-      return // Redirect Here
-    }
-
-    if (error) {
-      setUploadStatus(`Upload Failed. ${error.message}. Try renaming the file!`)
-      return
-    } 
-      
-    setUploadStatus('Upload Failed. Please try again.')
-    return
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            Upload a Picture
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <input
+      <Card className="w-full max-w-md bg-gray-800 text-gray-100 border-gray-700">
+        <CardHeader>
+          <h2 className="text-3xl font-extrabold text-center">Upload a Picture</h2>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Input
                 ref={fileInputRef}
                 id="file-upload"
-                name="file-upload"
                 type="file"
                 accept="image/*"
-                required
-                className="sr-only"
+                className="hidden"
                 onChange={handleFileChange}
               />
-              <button
+              <Button
                 type="button"
                 onClick={handleChooseFile}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full bg-indigo-600 hover:bg-indigo-700"
               >
                 Choose Image
-              </button>
+              </Button>
+              {fileName && (
+                <p className="text-sm text-gray-300">
+                  Selected file: <span className="font-medium">{fileName}</span>
+                </p>
+              )}
             </div>
-          </div>
-
-          {fileName && (
-            <div className="text-sm text-gray-300">
-              Selected file: <span className="font-medium">{fileName}</span>
-            </div>
+            <Button type="submit" className="w-full bg-gray-600 hover:bg-gray-700">
+              <Upload className="mr-2 h-4 w-4" /> Upload
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter>
+          {uploadStatus && (
+            <Alert variant={uploadStatus.toLowerCase().includes('success') ? "default" : "destructive"}>
+              <AlertDescription>{uploadStatus}</AlertDescription>
+            </Alert>
           )}
-
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              Upload
-            </button>
-          </div>
-        </form>
-
-        {uploadStatus && (
-          <div className={`mt-2 text-sm ${
-            uploadStatus.toLowerCase().includes('success') 
-              ? 'text-green-400' 
-              : 'text-red-400'
-          }`}>
-            {uploadStatus}
-          </div>
-        )}
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

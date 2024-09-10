@@ -24,7 +24,6 @@ export default function Chat() {
 
         cookies.forEach(cookie => {
             let [name, value] = cookie.split('=');
-            console.log(name, value);
             cookieStore[name] = value;
         });
 
@@ -32,7 +31,6 @@ export default function Chat() {
             let key = crypto.randomBytes(32).toString("hex");
             document.cookie = `chat_key=${key}`;
             cookieStore["chat_key"] = key;
-            console.log("created!");
         }
     }, [cookieStore]);
 
