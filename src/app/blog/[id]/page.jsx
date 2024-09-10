@@ -9,8 +9,18 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Calendar } from 'lucide-react'
 
-export const metadata = {
-  title: "Post",
+export async function generateMetadata({params}) {
+  const blog_info = await getBlogPost(params.id);
+
+  if (!blog_info) {
+    return {
+      title: "Blog Not Found",
+    }
+  }
+
+  return {
+    title: `Blog - ${blog_info.title}`,
+  }
 }
 
 async function getBlogPost(id) {
