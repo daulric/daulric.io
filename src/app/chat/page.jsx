@@ -5,6 +5,4 @@ export const metadata = {
     description: "Chatting with AI for Some Reason."
 }
 
-export default function CHAT() {
-    return <ChatApp />
-}
+export default ChatApp;
