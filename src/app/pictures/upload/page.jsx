@@ -5,4 +5,4 @@ export const metadata = {
     description: "Upload a picture for no reason..."
 }
 
-export default upload
+export default pic_upload;
