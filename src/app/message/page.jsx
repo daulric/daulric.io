@@ -1,5 +1,9 @@
 import { redirect } from "next/navigation"
 import axios from "axios"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const metadata = {
   title: "Message",
@@ -9,8 +13,6 @@ export const metadata = {
 async function SendMessage(FormData) {
   "use server"
   const { name, message } = Object.fromEntries(FormData)
-
-  
 
   const response = await axios.post(`${process.env.NEXT_URL}/api/message`, {
     name: name,
@@ -39,53 +41,51 @@ async function SendMessage(FormData) {
   }
 }
 
-
 export default function MessagePage() {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-              Send an Anonymous Message
-            </h2>
-          </div>
-          <form action={SendMessage} className="mt-8 space-y-6">
+  return (
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <Card className="max-w-md w-full bg-gray-800 text-white border border-gray-700">
+        <CardHeader>
+          <CardTitle className="text-center text-3xl font-extrabold text-white">
+            Send an Anonymous Message
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form action={SendMessage} className="space-y-6">
             <div>
               <label htmlFor="name" className="sr-only">
                 Name
               </label>
-              <input
+              <Input
                 id="name"
                 name="name"
                 type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Name"
+                required
+                className="bg-gray-700 text-white placeholder-gray-500 border-gray-600"
               />
             </div>
             <div>
               <label htmlFor="message" className="sr-only">
                 Message
               </label>
-              <textarea
+              <Textarea
                 id="message"
                 name="message"
-                rows="5"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Write your message here..."
-              ></textarea>
+                rows={5}
+                required
+                className="bg-gray-700 text-white border-gray-600 placeholder-gray-500"
+              />
             </div>
             <div>
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
+              <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
                 Send
-              </button>
+              </Button>
             </div>
           </form>
-        </div>
-      </div>
-    )
-  }
+        </CardContent>
+      </Card>
+    </div>
+  )
+}

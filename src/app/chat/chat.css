@@ -1,0 +1,17 @@
+/* Override the default background for code blocks */
+.hljs {
+    background: transparent !important;
+    color: #e2e8f0;
+}
+
+pre {
+    background: transparent !important;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+.hljs-string {
+    color: #a3e635 !important;
+}

@@ -31,20 +31,9 @@ export async function POST(request) {
 
     // Get Chat History From Database;
     if (!data || data === null || data.length === 0) {
-        let created_history = [
-            {
-                role: "user",
-                parts: [{text: "questons"}]
-            },
-            {
-                role: "model",
-                parts: [{text: "answers"}]
-            }
-        ]
-
         let items = await chat_db.upsert({
             chat_id: id,
-            chat_history: JSON.stringify(created_history),
+            chat_history: JSON.stringify([]),
         }).select()
 
         data_gotten = items.data;

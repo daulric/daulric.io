@@ -1,76 +1,85 @@
-import { redirect } from "next/navigation"
-import axios from "axios"
+import React from 'react';
+import { redirect } from "next/navigation";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { PenIcon } from "lucide-react";
 
 export const metadata = {
   title: "Blog - Create",
   description: "Create Your Very Own Blog",
-}
+};
 
-async function handlePost( FormData) {
-  "use server"
+async function handlePost(formData) {
+  "use server";
 
-  const { title, content } = Object.fromEntries(FormData)
+  const { title, content } = Object.fromEntries(formData); // Capture data from the form.
 
-  const {data: blog_data, status} = await axios.post(`${process.env.NEXT_URL}/api/blog`, {
+  // Posting the Form data
+  const { data: blog_data, status } = await axios.post(`${process.env.NEXT_URL}/api/blog`, {
     title: title,
     content: content,
-  })
+  });
 
-  if (status === 500) {
-    throw new Error("Error Creating Post")
-  } else {
-    redirect(`/blog/${blog_data.blog_id}`)
+  if (blog_data === null || blog_data.blog_id === null) {
+    console.log("Error Retrieving Posted Data!") // This should rarely happen!
+    return
   }
 
+  if (status !== 200) {
+    console.log("Unexpected status code") // This should always return 200.
+    return
+  }
+
+  return redirect(`/blog/${blog_data.blog_id}`); // Redirects to the given blog id.
 }
 
 export default function CreateBlog() {
-
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+      <Card className="w-full max-w-2xl bg-gray-800 border-gray-700">
+        <CardHeader>
+          <CardTitle className="text-3xl font-extrabold text-center flex items-center justify-center text-white">
+            <PenIcon className="w-8 h-8 mr-2 text-indigo-400" />
             Create a New Blog Post
-          </h2>
-        </div>
-        <form action={handlePost} className="mt-8 space-y-6">
-          <div>
-            <label htmlFor="title" className="sr-only">
-              Title
-            </label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              required
-              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Title"
-            />
-          </div>
-          <div>
-            <label htmlFor="content" className="sr-only">
-              Content
-            </label>
-            <textarea
-              id="content"
-              name="content"
-              rows="5"
-              required
-              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Write your blog post here..."
-            ></textarea>
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Create Blog
-            </button>
-          </div>
+          </CardTitle>
+          <CardDescription className="text-center text-gray-400">
+            Share your thoughts with the world
+          </CardDescription>
+        </CardHeader>
+        <form action={handlePost}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-gray-200">Title</Label>
+              <Input
+                id="title"
+                name="title"
+                required
+                placeholder="Enter your blog post title"
+                className="w-full bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="content" className="text-gray-200">Content</Label>
+              <Textarea
+                id="content"
+                name="content"
+                required
+                placeholder="Write your blog post here..."
+                className="min-h-[200px] bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+              />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+              Publish Blog Post
+            </Button>
+          </CardFooter>
         </form>
-      </div>
+      </Card>
     </div>
-  )
+  );
 }

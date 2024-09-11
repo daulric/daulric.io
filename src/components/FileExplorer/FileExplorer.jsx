@@ -1,8 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaFolder, FaFolderOpen, FaFile } from 'react-icons/fa';
-import SearchBar from "./SearchBar";
+import { ChevronRight, ChevronDown, Folder, File } from 'lucide-react';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+import SearchBar from "@/components/FileExplorer/SearchBar"
 
 const FileExplorer = ({ files }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,8 +31,8 @@ const FileExplorer = ({ files }) => {
   }, [files, searchTerm]);
 
   return (
-    <div>
-      <SearchBar onSearch={setSearchTerm} />
+    <div className="p-4">
+      <SearchBar onSearch={setSearchTerm}/>
       <FileList files={filteredFiles} />
     </div>
   );
@@ -36,7 +40,7 @@ const FileExplorer = ({ files }) => {
 
 const FileList = ({ files }) => {
   return (
-    <div className="file-explorer">
+    <div className="space-y-2">
       {files.map((file, index) => (
         <FileItem key={index} file={file} />
       ))}
@@ -46,12 +50,6 @@ const FileList = ({ files }) => {
 
 const FileItem = ({ file }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const toggleOpen = () => {
-    if (file.type === 'folder') {
-      setIsOpen(!isOpen);
-    }
-  };
 
   const handleFileAction = (e) => {
     e.stopPropagation();
@@ -66,31 +64,28 @@ const FileItem = ({ file }) => {
     }
   };
 
-  return (
-    <div>
-      <div
-        className="flex items-center cursor-pointer hover:bg-gray-800 p-2"
-        onClick={toggleOpen}
-      >
-        {file.type === 'folder' ? (
-          isOpen ? <FaFolderOpen className="mr-2" /> : <FaFolder className="mr-2" />
-        ) : (
-          <FaFile className="mr-2" />
-        )}
-        {file.type === 'file' ? (
-          <span onClick={handleFileAction} className="text-blue-500 hover:underline">
+  if (file.type === 'folder') {
+    return (
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="w-full justify-start">
+            {isOpen ? <ChevronDown className="mr-2 h-4 w-4" /> : <ChevronRight className="mr-2 h-4 w-4" />}
+            <Folder className="mr-2 h-4 w-4" />
             {file.name}
-          </span>
-        ) : (
-          <span>{file.name}</span>
-        )}
-      </div>
-      {file.type === 'folder' && isOpen && file.children && (
-        <div className="ml-4">
-          <FileList files={file.children} />
-        </div>
-      )}
-    </div>
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="ml-6">
+          <FileList files={file.children || []} />
+        </CollapsibleContent>
+      </Collapsible>
+    );
+  }
+
+  return (
+    <Button variant="ghost" className="w-full justify-start" onClick={handleFileAction}>
+      <File className="mr-2 h-4 w-4" />
+      <span className="text-blue-500 hover:underline">{file.name}</span>
+    </Button>
   );
 };
 

@@ -10,6 +10,7 @@ const withPWA = pwa({
     disable: false,
     workboxOptions: {
         disableDevLogs: true,
+        skipWaiting: true
     }
 })
 
