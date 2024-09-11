@@ -1,48 +1,77 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import crypto from "crypto"
-import {SupabaseClient} from "@/components/SupabaseClient"
+import { SupabaseClient } from "@/components/SupabaseClient"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
 
-export default function BetaAuthPage({setAuthed}) {
+export default function BetaAuthPage({ setAuthed }) {
+  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
+  const supa_db = SupabaseClient()
 
-    const [password, setPassword] = useState('');
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
 
-    const supa_db = SupabaseClient();
+    try {
+      // Handling Password
+      const { data, error } = await supa_db.from("live_creds").select("*").eq("name", "beta_pwd")
+      if (error) throw error
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        let secret;
-        // Handling Password
-        const {data, error} = await supa_db.from("live_creds").select("*").eq("name", "beta_pwd");
-        if (error) console.log(error);
-        secret = data[0].secret;
+      const secret = data[0].secret
 
-        // Handling Auth
-        if (password === secret) {
-            setAuthed(true)
-            document.cookie = `beta_access=${crypto.randomBytes(64).toString("hex")}`
-        } else {
-            alert('Incorrect password');
-        }
-    };
+      // Handling Auth
+      if (password === secret) {
+        setAuthed(true)
+        document.cookie = `beta_access=${crypto.randomBytes(64).toString("hex")}`
+        toast({
+          title: "Access Granted",
+          description: "Welcome to the beta!",
+          variant: "default",
+        })
+      } else {
+        throw new Error('Incorrect password')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      toast({
+        title: "Access Denied",
+        description: "Incorrect password. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-    return (
+  return (
+    <Card className="w-full max-w-md mx-auto bg-gray-800 border-gray-700">
+      <CardHeader className="bg-gray-800">
+        <CardTitle className="text-2xl font-bold text-center text-gray-50">Beta Access</CardTitle>
+      </CardHeader>
+      <CardContent className="bg-gray-800">
         <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              required
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100 placeholder-gray-400"
-            />
-            <button 
-              type="submit"
-              className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              Submit
-            </button>
-          </form>
-    )
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+            required
+          />
+          <Button 
+            type="submit"
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? "Verifying..." : "Submit"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  )
 }
