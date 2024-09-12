@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import BetaPage from "./BetaPage"
-import AuthFormPage from "./AuthenticationForm"
+import AuthFormPage from "./AuthenticationServer"
 import links from "./links"
 
 export default function BetaHome() {

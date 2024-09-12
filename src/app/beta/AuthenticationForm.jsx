@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import crypto from "crypto"
 import { SupabaseClient } from "@/components/SupabaseClient"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 
-export default function BetaAuthPage({ setAuthed }) {
+export default function BetaAuthPage({ setAuthed, secret }) {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
@@ -19,16 +19,11 @@ export default function BetaAuthPage({ setAuthed }) {
     setIsLoading(true)
 
     try {
-      // Handling Password
-      const { data, error } = await supa_db.from("live_creds").select("*").eq("name", "beta_pwd")
-      if (error) throw error
-
-      const secret = data[0].secret
-
       // Handling Auth
       if (password === secret) {
         setAuthed(true)
         document.cookie = `beta_access=${crypto.randomBytes(64).toString("hex")}`
+        console.log("access granted!")
         toast({
           title: "Access Granted",
           description: "Welcome to the beta!",
@@ -50,7 +45,7 @@ export default function BetaAuthPage({ setAuthed }) {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-gray-800 border-gray-700">
+    <Card className="w-full max-w-md mx-auto bg-gray-800 border-gray-800">
       <CardHeader className="bg-gray-800">
         <CardTitle className="text-2xl font-bold text-center text-gray-50">Beta Access</CardTitle>
       </CardHeader>
