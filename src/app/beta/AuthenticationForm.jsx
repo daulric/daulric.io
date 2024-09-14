@@ -1,22 +1,25 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import crypto from "crypto"
-import { SupabaseClient } from "@/components/SupabaseClient"
+import { decrypt } from "@/components/tools/encryption";
+import axios from "axios"
+
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 
-export default function BetaAuthPage({ setAuthed, secret }) {
+export default function BetaAuthPage({ setAuthed }) {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
-  const supa_db = SupabaseClient()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
+
+    const { data } = await axios.get(`/api/beta/auth`);
+    const secret = decrypt(data, "passcode");
 
     try {
       // Handling Auth

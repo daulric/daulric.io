@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import BetaPage from "./BetaPage"
-import AuthFormPage from "./AuthenticationServer"
 import links from "./links"
+
+import AuthFormPage from "./AuthenticationForm"
 
 export default function BetaHome() {
   const [isAuthed, setAuthed] = useState(false);
