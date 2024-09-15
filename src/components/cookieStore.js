@@ -1,5 +1,6 @@
 export const cookieStore = {
   get(name) {
+    if (typeof document === 'undefined') return null;
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
@@ -7,14 +8,14 @@ export const cookieStore = {
   },
 
   set(name, value, options = {}) {
-    const { days = 7, path = '/', secure = false, sameSite = 'Lax' } = options;
-    const expires = new Date();
-    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-
-    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=${path}; SameSite=${sameSite}${secure ? '; Secure' : ''}`;
+    if (typeof document === 'undefined') return;
+    const { days = 7, path = '/', secure = true, sameSite = 'Lax' } = options;
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=${path}; SameSite=${sameSite}${secure ? '; Secure' : ''}`;
   },
 
   remove(name, path = '/') {
-    document.cookie = `${name}=; Max-Age=0; path=${path}`;
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=; Max-Age=0; path=${path}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   }
 };

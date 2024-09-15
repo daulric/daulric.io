@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {GoogleGenerativeAI} from "@google/generative-ai"
-import { SupabaseClient } from "@/components/SupabaseClient";
+import { SupabaseClient } from "@/components/supabase/client";
 
 const ai = new GoogleGenerativeAI(process.env.GEMINI_KEY)
 const model = ai.getGenerativeModel({

@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@/components/SupabaseClient"
+import { SupabaseClient } from "@/components/supabase/client";
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest, {params}: {params: {id: string}}) {

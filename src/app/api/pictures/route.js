@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { SupabaseClient } from "@/components/SupabaseClient"
+import { SupabaseClient } from "@/components/supabase/client"
 import { unstable_noStore as noStore } from "next/cache";
 
 export async function GET(request) {

@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@/components/SupabaseClient"
+import { SupabaseClient } from "@/components/supabase/client"
 import {NextResponse} from "next/server"
 import { unstable_noStore as noStore } from "next/cache"
 

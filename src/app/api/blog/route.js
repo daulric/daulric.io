@@ -1,7 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache"
 import { NextResponse } from "next/server";
 
-import { SupabaseClient } from "@/components/SupabaseClient"
+import { SupabaseClient } from "@/components/supabase/client"
 
 export async function GET(request) {
     noStore();
