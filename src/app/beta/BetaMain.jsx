@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import BetaPage from "./BetaPage"
 import links from "./links"
+import { unstable_noStore as noStore } from "next/cache"
 
 import AuthFormPage from "./AuthenticationForm"
 

@@ -1,9 +1,11 @@
 import { SupabaseClient } from "@/components/SupabaseClient"
 import {NextResponse} from "next/server"
+import { unstable_noStore as noStore } from "next/cache"
 
 import {encrypt} from "@/components/tools/encryption"
 
 export async function GET() {
+    noStore();
     const supa_db = SupabaseClient();
     let secret = "";
 

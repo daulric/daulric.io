@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { decrypt } from "@/components/tools/encryption";
 import axios from "axios"
 
+import crypto from "crypto"
+
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
