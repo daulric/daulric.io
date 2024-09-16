@@ -11,7 +11,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { ChevronDown, Menu } from "lucide-react"
-import NavLinks from "./navlinks.js"
+import NavLinks from "../navlinks.js"
 
 const NavItem = ({ link, text, items, image, isMobile = false }) => {
   const [isOpen, setIsOpen] = useState(false)

@@ -64,6 +64,9 @@ export async function POST(request) {
 
                 if (insertError) throw insertError;
 
+                const account_data = success_data[0];
+                
+
                 return NextResponse.json({
                     success: true,
                     message: "Account created successfully",
