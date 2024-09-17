@@ -28,7 +28,7 @@ const LoginForm = () => {
   );
 };
 
-const SignUpForm = () => {
+const SignUpForm = ({setState}) => {
   return (
     <form>
       <div className="space-y-4">
@@ -36,16 +36,34 @@ const SignUpForm = () => {
           type="text" 
           placeholder="Username" 
           className="bg-gray-700 text-gray-100 border-gray-600"
+          onChange={(e) => { 
+            setState((state) => {
+              state.username = e.target.value;
+              return state
+            })
+           }}
         />
         <Input 
           type="email" 
           placeholder="Email" 
           className="bg-gray-700 text-gray-100 border-gray-600"
+          onChange={(e) => { 
+            setState((state) => {
+              state.email = e.target.value;
+              return state
+            })
+           }}
         />
         <Input 
           type="password" 
           placeholder="Password" 
           className="bg-gray-700 text-gray-100 border-gray-600"
+          onChange={(e) => { 
+            setState((state) => {
+              state.password = e.target.value;
+              return state
+            })
+           }}
         />
         <Input 
           type="password" 
@@ -65,13 +83,14 @@ async function handleSignup( { loginType, username, email, password } ) {
         password: password,
     })
 
-    if (data.success) {
-        
-    }
+    return data.success;
 }
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
+
+  const [signUp, setSignup] = useState({});
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-100">
@@ -83,14 +102,21 @@ const AuthPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {isLogin ? <LoginForm /> : <SignUpForm />}
+          {isLogin ? <LoginForm /> : <SignUpForm setState={setSignup} />}
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={() => {
             if (!isLogin) {
-                handleSignup();
+                setSignup((state) => {
+                  state.loginType = "signup";
+                  return state
+                })
+                handleSignup(signUp).then((success) =>{
+                  if (success === true) {
+                    return router.push("/")
+                  }
+                });
             }
-
           }}>
             {isLogin ? 'Login' : 'Sign Up'}
           </Button>

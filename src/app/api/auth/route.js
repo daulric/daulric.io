@@ -23,6 +23,8 @@ export async function POST(request) {
         const supa_client = SupabaseServer();
         const accounts_db = supa_client.from("Accounts");
 
+        const cookieStore = cookies();
+
         switch (loginType) {
             case "signup":
                 const { data: existing_accounts, error: checkError } = await accounts_db
@@ -65,7 +67,7 @@ export async function POST(request) {
                 if (insertError) throw insertError;
 
                 const account_data = success_data[0];
-                
+                cookieStore.set("user", account_data.user_id)
 
                 return NextResponse.json({
                     success: true,
