@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -11,7 +13,24 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Bell, LogOut, Settings, User } from 'lucide-react';
 
+import { useEffect } from "react";
+import { cookieStore } from '../cookieStore';
+import { useRouter } from 'next/navigation'; 
+
 const TopNavbar = ({ username = 'User' }) => {
+
+  useEffect(() => {
+    async function GetData() {
+      const user_token = cookieStore.get("user")
+
+      if (user_token) {
+        // rest of stuff here
+      }
+
+    }
+  }, [])
+
+
   return (
     <nav className="bg-gray-800 p-4 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">

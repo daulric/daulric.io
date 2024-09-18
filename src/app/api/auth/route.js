@@ -154,3 +154,21 @@ export async function PUT(request) {
         }, { status: 500 });
     }
 }
+
+export async function DELETE() {
+    const cookieStore = cookies();
+    const user_token = cookieStore.get("user")
+
+    if (!user_token) {
+        return NextResponse.json({
+            success: false,
+            message: "Alreaady Logged Out!"
+        }, { status: 409 })
+    }
+
+    cookieStore.delete("user")
+    return NextResponse.json({
+        success: true,
+        message: "Loggeed Out Successfully"
+    }, { status: 200 })
+}
