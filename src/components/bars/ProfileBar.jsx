@@ -13,22 +13,47 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Bell, LogOut, Settings, User } from 'lucide-react';
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { cookieStore } from '../cookieStore';
 import { useRouter } from 'next/navigation'; 
 
+import { SupabaseClient } from "@/components/supabase/client"
+
 const TopNavbar = ({ username = 'User' }) => {
+  const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     async function GetData() {
       const user_token = cookieStore.get("user")
+      const user_data = localStorage.getItem("user")
 
-      if (user_token) {
-        // rest of stuff here
+      if (!user_token) {
+        return router.push("/auth")
       }
 
+      if (!user_data) {
+        console.log("no user data")
+        const supa_client = SupabaseClient();
+        const accounts_db = supa_client.from("Accounts");
+
+        const { data, error } = await accounts_db.select("*").eq("user_id", user_token).single();
+        
+        if (error || !data) {
+          return router.push("/auth")
+        }
+        
+        localStorage.setItem("user", JSON.stringify(data));
+        setUser(data);
+      } else {
+        let converted_data = JSON.parse(user_data);
+        setUser(converted_data);
+        console.log("parsed data", converted_data);
+      }
     }
-  }, [])
+
+    GetData();
+  }, [setUser, router])
 
 
   return (
